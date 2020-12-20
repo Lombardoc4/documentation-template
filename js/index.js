@@ -3,43 +3,52 @@
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 (function (doc) {
-  var sortTitles = function sortTitles(entry, index) {
-    var currentIndex = index; // let currentDepth = 0;
-    // if (typeof depth === 'undefined') {
-    //     currentDepth = 1;
-    // } else {
-    //     currentDepth = depth;
-    // }
+  var generateTitle = function generateTitle(entry, currentIndex) {
+    var newEntry = document.createElement('div');
+    var copy = document.createElement('p');
+    var title = entry;
 
-    console.log(currentIndex);
-    var length = entry ? entry.length : 0; // console.log('entry', entry)
+    if (_typeof(title) === 'object') {
+      title = Object.keys(title)[0];
+      copy.classList.add('arrow');
+    }
+
+    copy.innerHTML = title;
+    newEntry.dataset.target = currentIndex;
+    newEntry.append(copy);
+    return newEntry;
+  };
+
+  var sortTitles = function sortTitles(entry, index, parentElement) {
+    var currentIndex = index;
+    var length = entry ? entry.length : 0;
 
     if (typeof entry === "string") {
-      console.log('string', entry);
+      return generateTitle(entry, currentIndex);
     } else if (typeof length == 'number' && length > -1) {
-      console.log('array', entry);
-
       _.each(entry, function (child, i) {
-        console.log('child', child);
         var newIndex = currentIndex + '-' + (i + 1);
-        console.log('newIndex', newIndex);
-        sortTitles(child, newIndex);
+        var sortedTitles = sortTitles(child, newIndex);
+        parentElement.append(sortedTitles);
       });
+
+      return parentElement;
     } else {
-      console.log('object', Object.keys(entry)[0]);
+      var groupTitle = generateTitle(entry, currentIndex);
+      var addedChildren;
 
       _.each(entry, function (child) {
-        console.log('child', child); // const newIndex = index + i;
-        // if (typeof index === 'number')
-
-        sortTitles(child, index); // else
-        // sortTitles(child, )
+        addedChildren = sortTitles(child, index, groupTitle);
       });
+
+      return addedChildren;
     }
   };
 
   _.each(userSections.navigationTitles, function (currentEntry, i) {
-    return sortTitles(currentEntry, i + 1);
+    var turtle = sortTitles(currentEntry, i + 1);
+    document.querySelector('.nav-buttons').append(turtle);
+    console.log('turtles', turtle);
   });
 
   var $ = {

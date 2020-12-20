@@ -2,7 +2,7 @@
 
 var userSections = {
   "navigationTitles": ["Welcome!", "Course Objectives", {
-    "Lesson 1: Overview of Sell": ["CellSearch System Componenets", {
+    "Lesson 1: Overview of Sell": ["CellSearch System Components", {
       "CellSearch Circulating Tumor Cell Kit": ["CellSearch Circulating Tumor Cell Kit", "Reagent Storage and Handling"]
     }, {
       "The CellSearch CTC Control Kit": "CTC Control Kit Storage and Handling"
