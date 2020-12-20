@@ -3,7 +3,45 @@
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 (function (doc) {
-  console.log(navigationTitles);
+  var sortTitles = function sortTitles(entry, index) {
+    var currentIndex = index; // let currentDepth = 0;
+    // if (typeof depth === 'undefined') {
+    //     currentDepth = 1;
+    // } else {
+    //     currentDepth = depth;
+    // }
+
+    console.log(currentIndex);
+    var length = entry ? entry.length : 0; // console.log('entry', entry)
+
+    if (typeof entry === "string") {
+      console.log('string', entry);
+    } else if (typeof length == 'number' && length > -1) {
+      console.log('array', entry);
+
+      _.each(entry, function (child, i) {
+        console.log('child', child);
+        var newIndex = currentIndex + '-' + (i + 1);
+        console.log('newIndex', newIndex);
+        sortTitles(child, newIndex);
+      });
+    } else {
+      console.log('object', Object.keys(entry)[0]);
+
+      _.each(entry, function (child) {
+        console.log('child', child); // const newIndex = index + i;
+        // if (typeof index === 'number')
+
+        sortTitles(child, index); // else
+        // sortTitles(child, )
+      });
+    }
+  };
+
+  _.each(userSections.navigationTitles, function (currentEntry, i) {
+    return sortTitles(currentEntry, i + 1);
+  });
+
   var $ = {
     // Single Item
     prevButton: doc.getElementById('prev'),
@@ -129,29 +167,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     doc.querySelector('.overlay').addEventListener('click', function () {
       closeModals(); // doc.querySelector('.modal.on').classList.remove('on')
     }); // Attachments
-
-    doc.getElementById('attachmentButton').addEventListener('click', function (e) {
-      e.stopPropagation();
-
-      if (!e.target.classList.contains('on')) {
-        // else{
-        closeModals();
-        doc.querySelector('.overlay').classList.add('on');
-        doc.getElementById('attachmentModal').classList.add('on');
-      } else {
-        closeModals();
-      }
-    }); // Bulk Fluid
-
-    doc.getElementById('bulkFluidButton').addEventListener('click', function (e) {
-      e.stopPropagation(); // const active = ()
-
-      if (!e.target.classList.contains('on')) {
-        // else{
-        closeModals();
-        doc.querySelector('.overlay').classList.add('on');
-        doc.getElementById('bulkFluidModal').classList.add('on');
-      }
-    });
+    // doc.getElementById('attachmentButton').addEventListener('click', (e) => {
+    //     e.stopPropagation();
+    //     if (!e.target.classList.contains('on')){
+    //         // else{
+    //         closeModals();
+    //         doc.querySelector('.overlay').classList.add('on');
+    //         doc.getElementById('attachmentModal').classList.add('on');
+    //     } else {
+    //         closeModals();
+    //     }
+    // })
+    // Bulk Fluid
+    // doc.getElementById('bulkFluidButton').addEventListener('click', (e) => {
+    //     e.stopPropagation();
+    //     // const active = ()
+    //     if (!e.target.classList.contains('on')){
+    //         // else{
+    //         closeModals();
+    //         doc.querySelector('.overlay').classList.add('on');
+    //         doc.getElementById('bulkFluidModal').classList.add('on');
+    //     }
+    // })
   };
 })((typeof document === "undefined" ? "undefined" : _typeof(document)) === 'object' && document);

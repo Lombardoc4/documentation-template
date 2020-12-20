@@ -1,6 +1,6 @@
 "use strict";
 
-var navigationTitles = {
+var userSections = {
   "navigationTitles": ["Welcome!", "Course Objectives", {
     "Lesson 1: Overview of Sell": ["CellSearch System Componenets", {
       "CellSearch Circulating Tumor Cell Kit": ["CellSearch Circulating Tumor Cell Kit", "Reagent Storage and Handling"]
