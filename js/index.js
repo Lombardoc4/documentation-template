@@ -19,34 +19,70 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return newEntry;
   };
 
-  var sortTitles = function sortTitles(entry, index, parentElement) {
+  var addSubNavChildren = function addSubNavChildren(el, navParent) {
+    var parentTarget = +navParent.dataset.target;
+    var lastIndex = parentTarget + el.length;
+
+    _.each(el, function (child, i) {
+      var newIndex = parentTarget + (i + 1);
+      var htmlChild;
+
+      if (_typeof(child) !== 'object') {
+        htmlChild = configNav(child, newIndex); // console.log('array', htmlChild);
+      } else {
+        htmlChild = addSubNav(child, newIndex);
+      }
+
+      navParent.append(htmlChild);
+    });
+
+    return [navParent, lastIndex];
+  };
+
+  var addSubNav = function addSubNav(objectEl, i) {
+    var subNavTitle = generateTitle(objectEl, i);
+    var addedChildren = []; // let lastIndex = i;
+
+    subNavTitle.addEventListener('click', function () {
+      console.log('clicked');
+    });
+
+    _.each(objectEl, function (child) {
+      var lastIndex = i + 1;
+      console.log(lastIndex);
+      console.log('child', child);
+
+      if (typeof child === 'string') {
+        // const subNavChild =;
+        subNavTitle.appendChild(generateTitle(child, lastIndex));
+        addedChildren.push(subNavTitle, lastIndex);
+      } else {
+        console.log('blah blah bllsfsf', addSubNavChildren(child, subNavTitle));
+        addedChildren.push(addSubNavChildren(child, subNavTitle)); // addedChildren = newSubNav[0];
+
+        lastIndex = addedChildren[1];
+      }
+    });
+
+    console.log('addedChildren', addedChildren);
+    return addedChildren;
+  };
+
+  var configNav = function configNav(entry, index) {
     var currentIndex = index;
     var length = entry ? entry.length : 0;
 
     if (typeof entry === "string") {
       return generateTitle(entry, currentIndex);
-    } else if (typeof length == 'number' && length > -1) {
-      _.each(entry, function (child, i) {
-        var newIndex = currentIndex + '-' + (i + 1);
-        var sortedTitles = sortTitles(child, newIndex);
-        parentElement.append(sortedTitles);
-      });
-
-      return parentElement;
+    } else if (typeof length == 'number' && length > -1) {// if Array do nothing
     } else {
-      var groupTitle = generateTitle(entry, currentIndex);
-      var addedChildren;
-
-      _.each(entry, function (child) {
-        addedChildren = sortTitles(child, index, groupTitle);
-      });
-
-      return addedChildren;
+      var addedChildren = addSubNav(entry, index);
+      return addedChildren[0];
     }
   };
 
   _.each(userSections.navigationTitles, function (currentEntry, i) {
-    var turtle = sortTitles(currentEntry, i + 1);
+    var turtle = configNav(currentEntry, i + 1);
     document.querySelector('.nav-buttons').append(turtle);
     console.log('turtles', turtle);
   });
