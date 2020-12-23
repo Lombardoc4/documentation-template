@@ -27,64 +27,60 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var newIndex = parentTarget + (i + 1);
       var htmlChild;
 
-      if (_typeof(child) !== 'object') {
-        htmlChild = configNav(child, newIndex); // console.log('array', htmlChild);
-      } else {
+      if (typeof child === 'string') {
+        htmlChild = configNav(child, newIndex);
+      } else if (_typeof(child) === 'object') {
         htmlChild = addSubNav(child, newIndex);
       }
 
       navParent.append(htmlChild);
-    });
+    }); // console.log('arrayExit', [navParent, lastIndex])
 
-    return [navParent, lastIndex];
+
+    return navParent;
   };
 
   var addSubNav = function addSubNav(objectEl, i) {
     var subNavTitle = generateTitle(objectEl, i);
-    var addedChildren = []; // let lastIndex = i;
-
-    subNavTitle.addEventListener('click', function () {
-      console.log('clicked');
+    var addedChildren;
+    var lastIndex = i + 1;
+    subNavTitle.addEventListener('click', function () {// console.log('clicked');
     });
 
     _.each(objectEl, function (child) {
-      var lastIndex = i + 1;
-      console.log(lastIndex);
-      console.log('child', child);
-
       if (typeof child === 'string') {
-        // const subNavChild =;
         subNavTitle.appendChild(generateTitle(child, lastIndex));
-        addedChildren.push(subNavTitle, lastIndex);
+        console.log('string', subNavTitle); // addedChildren.push(subNavTitle, lastIndex) ;
+
+        addedChildren = subNavTitle;
       } else {
-        console.log('blah blah bllsfsf', addSubNavChildren(child, subNavTitle));
-        addedChildren.push(addSubNavChildren(child, subNavTitle)); // addedChildren = newSubNav[0];
-
-        lastIndex = addedChildren[1];
+        // const subNavChildren = addSubNavChildren(child, subNavTitle);
+        // console.log('subNavChildren', subNavChildren);
+        // addedChildren.push(subNavChildren[0]);
+        // lastIndex = subNavChildren[1];
+        // console.log([addedChildren, lastIndex]);
+        addedChildren = addSubNavChildren(child, subNavTitle);
       }
-    });
+    }); // console.log('addedChildren', addedChildren)
 
-    console.log('addedChildren', addedChildren);
+
     return addedChildren;
   };
 
-  var configNav = function configNav(entry, index) {
-    var currentIndex = index;
-    var length = entry ? entry.length : 0;
-
-    if (typeof entry === "string") {
-      return generateTitle(entry, currentIndex);
-    } else if (typeof length == 'number' && length > -1) {// if Array do nothing
-    } else {
-      var addedChildren = addSubNav(entry, index);
-      return addedChildren[0];
+  var configNav = function configNav(navElement, i) {
+    if (typeof navElement === "string") {
+      return generateTitle(navElement, i);
+    } else if (_typeof(navElement) === "object") {
+      var subNav = addSubNav(navElement, i);
+      return subNav;
     }
   };
 
-  _.each(userSections.navigationTitles, function (currentEntry, i) {
-    var turtle = configNav(currentEntry, i + 1);
-    document.querySelector('.nav-buttons').append(turtle);
-    console.log('turtles', turtle);
+  _.each(userSections.navigationTitles, function (navElement, i) {
+    // const navElement = configNav(currentEntry , i + 1);
+    // document.querySelector('.nav-buttons').append(navElement);
+    // or
+    document.querySelector('.nav-buttons').append(configNav(navElement, i + 1));
   });
 
   var $ = {
