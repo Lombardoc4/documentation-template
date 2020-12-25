@@ -82,6 +82,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     // const navElement = configNav(currentEntry , i + 1);
     // document.querySelector('.nav-buttons').append(navElement);
     // or
+    // Merry Christmas
     document.querySelector('.nav-buttons').append(configNav(navElement, i + 1));
   });
 
