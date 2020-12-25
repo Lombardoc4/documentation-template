@@ -21,57 +21,59 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   var addSubNavChildren = function addSubNavChildren(el, navParent) {
     var parentTarget = +navParent.dataset.target;
-    var lastIndex = parentTarget + el.length;
+    var nextIndex = parentTarget;
 
     _.each(el, function (child, i) {
-      var newIndex = parentTarget + (i + 1);
-      var htmlChild;
+      nextIndex = nextIndex + 1; // const newIndex = parentTarget + (i + 1);
+
+      var htmlChild; // console.log('parentTarget', parentTarget);
 
       if (typeof child === 'string') {
-        htmlChild = configNav(child, newIndex);
+        console.log('string child', child);
+        htmlChild = configNav(child, nextIndex);
       } else if (_typeof(child) === 'object') {
-        htmlChild = addSubNav(child, newIndex);
+        console.log('object child', child);
+        var subNav = addSubNav(child, nextIndex);
+        htmlChild = subNav[0];
+        nextIndex = subNav[1];
       }
 
+      console.log('htmlChild', htmlChild);
+      htmlChild.dataset.children = parentTarget;
       navParent.append(htmlChild);
-    }); // console.log('arrayExit', [navParent, lastIndex])
+    });
 
-
-    return navParent;
+    return [navParent, nextIndex];
   };
 
   var addSubNav = function addSubNav(objectEl, i) {
     var subNavTitle = generateTitle(objectEl, i);
-    var addedChildren;
+    var addedChildren = [];
     var lastIndex = i + 1;
     subNavTitle.addEventListener('click', function () {// console.log('clicked');
     });
 
     _.each(objectEl, function (child) {
       if (typeof child === 'string') {
-        subNavTitle.appendChild(generateTitle(child, lastIndex));
-        console.log('string', subNavTitle); // addedChildren.push(subNavTitle, lastIndex) ;
-
-        addedChildren = subNavTitle;
+        var title = generateTitle(child, lastIndex);
+        title.dataset.children = i;
+        subNavTitle.appendChild(title);
+        addedChildren.push(subNavTitle);
       } else {
-        // const subNavChildren = addSubNavChildren(child, subNavTitle);
-        // console.log('subNavChildren', subNavChildren);
-        // addedChildren.push(subNavChildren[0]);
-        // lastIndex = subNavChildren[1];
-        // console.log([addedChildren, lastIndex]);
-        addedChildren = addSubNavChildren(child, subNavTitle);
+        var subNavChildren = addSubNavChildren(child, subNavTitle);
+        addedChildren.push(subNavChildren[0]);
+        lastIndex = subNavChildren[1];
       }
-    }); // console.log('addedChildren', addedChildren)
+    });
 
-
-    return addedChildren;
+    return [addedChildren[0], lastIndex];
   };
 
   var configNav = function configNav(navElement, i) {
     if (typeof navElement === "string") {
       return generateTitle(navElement, i);
     } else if (_typeof(navElement) === "object") {
-      var subNav = addSubNav(navElement, i);
+      var subNav = addSubNav(navElement, i)[0];
       return subNav;
     }
   };
